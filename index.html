@@ -114,7 +114,7 @@
 
                             if (elementPositions[positionKey]) {
                                 const atom = elementPositions[positionKey];
-                                element.innerHTML = `<strong>${atom.symbol}</strong><p style="font-size:10px">${atom.name}</p>${atom.atomicNumber}`;
+                                element.innerHTML = `<strong>${atom.symbol}</strong><p style="font-size:10px; margin: 2px">${atom.name}</p>${atom.atomicNumber}`;
                                 element.addEventListener("click", () => {
                                     // Contenu du popup incluant une div pour la visualisation 3D
                                     popupContent.innerHTML = `
