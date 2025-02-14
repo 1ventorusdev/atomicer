@@ -1,0 +1,20 @@
+{
+    "proton": {
+        "charge": "+1",
+        "mass": 1.6726e-27,
+        "color": "#FF0000",
+        "size": 0.3
+    },
+    "neutron": {
+        "charge": "0",
+        "mass": 1.6750e-27,
+        "color": "#808080",
+        "size": 0.3
+    },
+    "electron": {
+        "charge": "-1",
+        "mass": 9.109e-31,
+        "color": "#0000FF",
+        "size": 0.1
+    }
+}
