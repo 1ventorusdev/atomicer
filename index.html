@@ -19,6 +19,30 @@
             /* fond de page */
         }
 
+        /* Légende des couleurs */
+        #legend {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 10px auto;
+            max-width: 1200px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 0 10px;
+            font-size: 1em;
+        }
+
+        .legend-item .color-box {
+            width: 15px;
+            height: 15px;
+            display: inline-block;
+            margin-right: 5px;
+            border: 1px solid #000;
+        }
+
         #periodic-table {
             display: grid;
             grid-template-columns: repeat(18, 1fr);
@@ -58,6 +82,17 @@
             background-color: white;
         }
 
+        #lanthanides,
+        #actinides {
+            display: grid;
+            grid-template-columns: repeat(15, 1fr);
+            gap: 5px;
+            justify-content: center;
+            padding: 10px;
+            max-width: 900px;
+            margin: auto;
+        }
+
         #popup {
             display: none;
             position: fixed;
@@ -79,30 +114,110 @@
             margin-top: 10px;
             color: red;
         }
+
+        /* Styles mobile-friendly */
+        @media (max-width: 768px) {
+            #periodic-table {
+                grid-template-columns: repeat(6, 1fr);
+                max-width: 90%;
+            }
+
+            .element {
+                width: 40px;
+                height: 40px;
+                font-size: 0.8em;
+            }
+
+            #lanthanides,
+            #actinides {
+                grid-template-columns: repeat(6, 1fr);
+                max-width: 90%;
+            }
+
+            #legend .legend-item {
+                font-size: 0.8em;
+                margin: 5px;
+            }
+
+            #atom-visualization {
+                width: 90vw;
+                height: 90vw;
+            }
+        }
     </style>
 </head>
 
 <body>
     <h1>Tableau Périodique</h1>
+    <div id="legend"></div>
     <div id="periodic-table"></div>
+    <h2>Lanthanides</h2>
+    <div id="lanthanides"></div>
+    <h2>Actinides</h2>
+    <div id="actinides"></div>
     <div id="popup">
         <div id="popup-content"></div>
         <button id="close-popup">Fermer</button>
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
+
+            /* --- Création de la légende --- */
+            const legendContainer = document.getElementById("legend");
+            const legendData = {
+                "Alkali metals": "#FF4C4C",
+                "Alkaline earth metals": "#FFCC66",
+                "Transition metals": "#FFD700",
+                "Post-transition metals": "#A9A9A9",
+                "Metalloids": "#99FF99",
+                "Nonmetals": "#66CCFF",
+                "Halogens": "#FF66CC",
+                "Noble gases": "#CCCCFF",
+                "Lanthanides": "#FF9F00",
+                "Actinides": "#FF6633"
+            };
+            for (const group in legendData) {
+                const item = document.createElement("div");
+                item.className = "legend-item";
+                item.innerHTML = `<span class="color-box" style="background-color: ${legendData[group]};"></span>${group}`;
+                legendContainer.appendChild(item);
+            }
+
             fetch("atoms.json")
                 .then(response => response.json())
                 .then(data => {
                     const tableContainer = document.getElementById("periodic-table");
+                    const lanthanidesContainer = document.getElementById("lanthanides");
+                    const actinidesContainer = document.getElementById("actinides");
                     const popup = document.getElementById("popup");
                     const popupContent = document.getElementById("popup-content");
                     const closePopup = document.getElementById("close-popup");
 
+                    const groupColors = {
+                        "Alkali metals": "#FF4C4C",            // Plus intense et clair pour les métaux alcalins
+                        "Alkaline earth metals": "#FFCC66",     // Une couleur plus chaude et dorée pour les métaux alcalino-terreux
+                        "Transition metals": "#FFD700",         // L'or pour représenter les métaux de transition
+                        "Post-transition metals": "#A9A9A9",    // Gris métallique pour les métaux post-transition
+                        "Metalloids": "#99FF99",                // Une teinte plus douce et verte pour les métalloïdes
+                        "Nonmetals": "#66CCFF",                 // Bleu clair pour les non-métaux
+                        "Halogens": "#FF66CC",                  // Un rose-violet lumineux pour les halogènes
+                        "Noble gases": "#CCCCFF",               // Bleu pâle pour les gaz nobles
+                        "Lanthanides": "#FF9F00",               // Une teinte orange plus saturée pour les lanthanides
+                        "Actinides": "#FF6633"                  // Rouge-orangé pour les actinides
+                    };
+
                     // Création d'un objet pour accéder rapidement aux atomes par position "période-groupe"
                     const elementPositions = {};
+                    const lanthanides = [];
+                    const actinides = [];
                     data.forEach(atom => {
-                        elementPositions[`${atom.period}-${atom.group}`] = atom;
+                        if (atom.atomicNumber >= 57 && atom.atomicNumber <= 71) {
+                            lanthanides.push(atom);
+                        } else if (atom.atomicNumber >= 89 && atom.atomicNumber <= 103) {
+                            actinides.push(atom);
+                        } else {
+                            elementPositions[`${atom.period}-${atom.group}`] = atom;
+                        }
                     });
 
                     // Générer un tableau de 7 périodes x 18 groupes
@@ -114,10 +229,40 @@
 
                             if (elementPositions[positionKey]) {
                                 const atom = elementPositions[positionKey];
+                                element.style.backgroundColor = groupColors[atom.category] || "lightgray";
                                 element.innerHTML = `<strong>${atom.symbol}</strong><p style="font-size:10px; margin: 2px">${atom.name}</p>${atom.atomicNumber}`;
                                 element.addEventListener("click", () => {
                                     // Contenu du popup incluant une div pour la visualisation 3D
                                     popupContent.innerHTML = `
+                    <h2>${atom.name} (${atom.symbol})</h2>
+                    <p>Numéro Atomique: ${atom.atomicNumber}</p>
+                    <p>Masse Atomique: ${atom.atomicMass}</p>
+                    <p>Caégorie: ${atom.category}</p>
+                    <p>Période: ${atom.period}</p>
+                    <p>Électronégativité: ${atom.electronegativity || "N/A"}</p>
+                    <p>Découvert par: ${atom.discoveredBy || "Inconnu"}</p>
+                    <p>Année de Découverte: ${atom.discoveryYear || "Inconnue"}</p>
+                    <div id="atom-visualization" style="width:400px; height:400px; margin: auto;"></div>
+                  `;
+                                    popup.style.display = "block";
+                                    popup.style.backgroundColor = groupColors[atom.category] || "lightgray";
+                                    initAtom3D(atom); // Initialise la visualisation 3D pour cet atome
+                                });
+                            } else {
+                                // Si aucun atome n'est associé à cette case, on lui ajoute la classe "empty"
+                                element.classList.add("empty");
+                            }
+                            tableContainer.appendChild(element);
+                        }
+                    }
+
+                    lanthanides.forEach(atom => {
+                        const element = document.createElement("div");
+                        element.className = "element";
+                        element.style.backgroundColor = groupColors["Lanthanides"];
+                        element.innerHTML = `<strong>${atom.symbol}</strong><p style="font-size:10px; margin: 2px">${atom.name}</p>${atom.atomicNumber}`;
+                        element.addEventListener("click", () => {
+                            popupContent.innerHTML = `
                     <h2>${atom.name} (${atom.symbol})</h2>
                     <p>Numéro Atomique: ${atom.atomicNumber}</p>
                     <p>Masse Atomique: ${atom.atomicMass}</p>
@@ -128,16 +273,36 @@
                     <p>Année de Découverte: ${atom.discoveryYear || "Inconnue"}</p>
                     <div id="atom-visualization" style="width:400px; height:400px; margin: auto;"></div>
                   `;
-                                    popup.style.display = "block";
-                                    initAtom3D(atom); // Initialise la visualisation 3D pour cet atome
-                                });
-                            } else {
-                                // Si aucun atome n'est associé à cette case, on lui ajoute la classe "empty"
-                                element.classList.add("empty");
-                            }
-                            tableContainer.appendChild(element);
-                        }
-                    }
+                            popup.style.display = "block";
+                            popup.style.backgroundColor = groupColors["Lanthanides"] || "lightgray";
+                            initAtom3D(atom); // Initialise la visualisation 3D pour cet atome
+                        });
+                        lanthanidesContainer.appendChild(element);
+                    });
+
+                    actinides.forEach(atom => {
+                        const element = document.createElement("div");
+                        element.className = "element";
+                        element.style.backgroundColor = groupColors["Actinides"];
+                        element.innerHTML = `<strong>${atom.symbol}</strong><p style="font-size:10px; margin: 2px">${atom.name}</p>${atom.atomicNumber}`;
+                        element.addEventListener("click", () => {
+                            popupContent.innerHTML = `
+                    <h2>${atom.name} (${atom.symbol})</h2>
+                    <p>Numéro Atomique: ${atom.atomicNumber}</p>
+                    <p>Masse Atomique: ${atom.atomicMass}</p>
+                    <p>Groupe: ${atom.group}</p>
+                    <p>Période: ${atom.period}</p>
+                    <p>Électronégativité: ${atom.electronegativity || "N/A"}</p>
+                    <p>Découvert par: ${atom.discoveredBy || "Inconnu"}</p>
+                    <p>Année de Découverte: ${atom.discoveryYear || "Inconnue"}</p>
+                    <div id="atom-visualization" style="width:400px; height:400px; margin: auto;"></div>
+                  `;
+                            popup.style.display = "block";
+                            popup.style.backgroundColor = groupColors["Actinides"] || "lightgray";
+                            initAtom3D(atom); // Initialise la visualisation 3D pour cet atome
+                        });
+                        actinidesContainer.appendChild(element);
+                    });
 
                     closePopup.addEventListener("click", () => {
                         popup.style.display = "none";
