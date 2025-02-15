@@ -157,6 +157,20 @@
         <div id="popup-content"></div>
         <button id="close-popup">Fermer</button>
     </div>
+
+    <div id="other_page">
+        <ul>
+            <li>
+                <a href="les_atomes.html">Les Atomes</a>
+            </li>
+            <li>
+                <a href="les_representation.html">Les Représentations</a>
+            </li>
+            <li>
+                <a href="methode_d_identification.html">Méthode d'identification</a>
+            </li>
+        </ul>
+    </div>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
 
@@ -242,6 +256,7 @@
                     <p>Électronégativité: ${atom.electronegativity || "N/A"}</p>
                     <p>Découvert par: ${atom.discoveredBy || "Inconnu"}</p>
                     <p>Année de Découverte: ${atom.discoveryYear || "Inconnue"}</p>
+                    <p style="text-decoration: underline"><strong>Representation de bohr</strong></p>
                     <div id="atom-visualization" style="width:400px; height:400px; margin: auto;"></div>
                   `;
                                     popup.style.display = "block";
@@ -272,6 +287,7 @@
                     <p>Électronégativité: ${atom.electronegativity || "N/A"}</p>
                     <p>Découvert par: ${atom.discoveredBy || "Inconnu"}</p>
                     <p>Année de Découverte: ${atom.discoveryYear || "Inconnue"}</p>
+                    <p style="text-decoration: underline"><strong>Representation de bohr</strong></p>
                     <div id="atom-visualization" style="width:400px; height:400px; margin: auto;"></div>
                   `;
                             popup.style.display = "block";
@@ -297,6 +313,7 @@
                     <p>Électronégativité: ${atom.electronegativity || "N/A"}</p>
                     <p>Découvert par: ${atom.discoveredBy || "Inconnu"}</p>
                     <p>Année de Découverte: ${atom.discoveryYear || "Inconnue"}</p>
+                    <p style="text-decoration: underline"><strong>Representation de bohr</strong></p>
                     <div id="atom-visualization" style="width:400px; height:400px; margin: auto;"></div>
                   `;
                             popup.style.display = "block";
@@ -348,7 +365,7 @@
                 function createNucleon(isProton) {
                     const nucleonGeometry = new THREE.SphereGeometry(0.2, 16, 16);
                     const nucleonMaterial = new THREE.MeshPhongMaterial({
-                        color: isProton ? 0xff0000 : 0x0000ff, // Rouge pour proton, bleu pour neutron
+                        color: isProton ? 0xff0000 : 0x949494, // Rouge pour proton, bleu pour neutron
                     });
                     const nucleon = new THREE.Mesh(nucleonGeometry, nucleonMaterial);
 
