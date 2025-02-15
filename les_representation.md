@@ -89,7 +89,7 @@ _image du graphite visualisé par microscope a effet tunnel_
 ## Aide :
 
 ### Rayon cathodique
-Les rayons cathodiques sont des faisceaux de particules chargées négativement (électrons) émis par une cathode dans un tube à vide. Ils ont été utilisés par Thomson pour identifier l'électron.
+Les rayons cathodiques sont des faisceaux de particules chargées négativement (électrons) émis par une cathode dans un tube à vide, et sont devié lorsqu'elles passent proche de la plaque chargé positivement. Ils ont été utilisés par Thomson pour identifier l'électron.
 
 <img src="https://upload.wikimedia.org/wikipedia/commons/d/d7/JJ_Thomson_exp2.png" alt="représentation du tube cathodique de Thomson" width="400" />
 
