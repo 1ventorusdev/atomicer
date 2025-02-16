@@ -29,7 +29,7 @@
         .legend-item {
             display: flex;
             align-items: center;
-            margin: 0 10px;
+            margin: 0 0px;
             font-size: 1em;
         }
 
@@ -37,7 +37,7 @@
             width: 15px;
             height: 15px;
             display: inline-block;
-            margin-right: 5px;
+            margin-right: 1px;
             border: 1px solid #000;
         }
 
@@ -134,7 +134,7 @@
 
             #legend .legend-item {
                 font-size: 0.8em;
-                margin: 5px;
+                margin: 2px;
             }
 
             #atom-visualization {
@@ -156,6 +156,7 @@
     <div id="popup">
         <div id="popup-content"></div>
         <button id="close-popup">Fermer</button>
+        
     </div>
 
     <div id="other_page">
@@ -201,7 +202,7 @@
             for (const group in legendData) {
                 const item = document.createElement("div");
                 item.className = "legend-item";
-                item.innerHTML = `<span class="color-box" style="background-color: ${legendData[group]};"></span>${group}`;
+                item.innerHTML = `<span class="color-box" style="background-color: ${legendData[group]};"></span>&nbsp;${group}&nbsp;&nbsp;&nbsp;`;
                 legendContainer.appendChild(item);
 
                 // Récupération de la couleur associée à l'item (convertie en RGB)
@@ -209,11 +210,7 @@
 
                 item.addEventListener("mouseenter", () => {
     const elements = document.querySelectorAll('.element');
-    console.log("click");
     elements.forEach(el => {
-        console.log("element : ", (el.style.backgroundColor));
-        console.log("legende : ", (hoveredColorRgb));
-        console.log(el.dataset.originalColor === hoveredColorRgb);
         
         
 
@@ -279,9 +276,9 @@ item.addEventListener("mouseleave", () => {
                     const lanthanides = [];
                     const actinides = [];
                     data.forEach(atom => {
-                        if (atom.atomicNumber >= 57 && atom.atomicNumber <= 71) {
+                        if (atom.atomicNumber >= 58 && atom.atomicNumber <= 71) {
                             lanthanides.push(atom);
-                        } else if (atom.atomicNumber >= 89 && atom.atomicNumber <= 103) {
+                        } else if (atom.atomicNumber >= 90 && atom.atomicNumber <= 103) {
                             actinides.push(atom);
                         } else {
                             elementPositions[`${atom.period}-${atom.group}`] = atom;

@@ -2164,7 +2164,7 @@
         "atomicMass": 227,
         "discoveryYear": 1899,
         "discoveredBy": "Curie",
-        "group": "Actinoïdes",
+        "group": 3,
         "period": 7,
         "electronConfiguration": "[Rn] 6d1 7s2",
         "electronShells": [
