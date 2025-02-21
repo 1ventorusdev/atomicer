@@ -16,25 +16,27 @@
     }
     /* Légende des couleurs */
     #legend {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin: 10px auto;
-      max-width: 1200px;
-    }
-    .legend-item {
-      display: flex;
-      align-items: center;
-      margin: 0 5px;
-      font-size: 1em;
-    }
-    .legend-item .color-box {
-      width: 15px;
-      height: 15px;
-      display: inline-block;
-      margin-right: 5px;
-      border: 1px solid #000;
-    }
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 10px auto;
+            max-width: 1200px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 0 0px;
+            font-size: 1em;
+        }
+
+        .legend-item .color-box {
+            width: 15px;
+            height: 15px;
+            display: inline-block;
+            margin-right: 1px;
+            border: 1px solid #000;
+        }
     /* Version desktop : grille du tableau périodique */
     #periodic-table {
       display: grid;
@@ -194,47 +196,65 @@
     document.addEventListener("DOMContentLoaded", () => {
       /* Création de la légende */
       const legendContainer = document.getElementById("legend");
-      const legendData = {
-        "Alkali metals": "#FF4C4C",
-        "Alkaline earth metals": "#FFCC66",
-        "Transition metals": "#FFD700",
-        "Post-transition metals": "#A9A9A9",
-        "Metalloids": "#99FF99",
-        "Nonmetals": "#66CCFF",
-        "Halogens": "#FF66CC",
-        "Noble gases": "#CCCCFF",
-        "Lanthanides": "#FF9F00",
-        "Actinides": "#FF6633",
-        "Unknown": "#6e6e6e"
-      };
-      for (const group in legendData) {
-        const item = document.createElement("div");
-        item.className = "legend-item";
-        item.innerHTML = `<span class="color-box" style="background-color: ${legendData[group]};"></span>&nbsp;${group}`;
-        legendContainer.appendChild(item);
-        // Animation simple au survol
-        const hoveredColorRgb = hexToRgb(legendData[group]);
-        item.addEventListener("mouseenter", () => {
-          const elements = document.querySelectorAll('.element');
-          elements.forEach(el => {
-            if (!el.classList.contains("empty") && el.style.backgroundColor) {
-              if (!el.dataset.savedColor) {
+            const legendData = {
+                "Alkali metals": "#FF4C4C",
+                "Alkaline earth metals": "#FFCC66",
+                "Transition metals": "#FFD700",
+                "Post-transition metals": "#A9A9A9",
+                "Metalloids": "#99FF99",
+                "Nonmetals": "#66CCFF",
+                "Halogens": "#FF66CC",
+                "Noble gases": "#CCCCFF",
+                "Lanthanides": "#FF9F00",
+                "Actinides": "#FF6633",
+                "Unknown": "#6e6e6e"
+            };
+            // Pour chaque item de la légende, on ajoute aussi des écouteurs d'événements
+            for (const group in legendData) {
+                const item = document.createElement("div");
+                item.className = "legend-item";
+                item.innerHTML = `<span class="color-box" style="background-color: ${legendData[group]};"></span>&nbsp;${group}&nbsp;&nbsp;&nbsp;`;
+                legendContainer.appendChild(item);
+
+                // Récupération de la couleur associée à l'item (convertie en RGB)
+                const hoveredColorRgb = hexToRgb(legendData[group]);
+
+                item.addEventListener("mouseenter", () => {
+    const elements = document.querySelectorAll('.element');
+    elements.forEach(el => {
+        
+        
+
+        // On ne modifie que les cases non vides ayant une couleur d'origine définie
+        if (!el.classList.contains("empty") && el.style.backgroundColor) {
+
+            if (!el.dataset.savedColor) {
                 el.dataset.savedColor = el.style.backgroundColor;
-              }
-              el.style.backgroundColor = "gray";
             }
-          });
-        });
-        item.addEventListener("mouseleave", () => {
-          const elements = document.querySelectorAll('.element');
-          elements.forEach(el => {
-            if (!el.classList.contains("empty") && el.dataset.savedColor) {
-              el.style.backgroundColor = el.dataset.savedColor;
-              delete el.dataset.savedColor;
+            // Conversion de la couleur d'origine en RGB pour comparaison
+            if (el.style.backgroundColor === hoveredColorRgb) {
+                // On laisse la couleur d'origine
+                el.style.backgroundColor = el.dataset.originalColor;
+            } else {
+                el.style.backgroundColor = "gray";
             }
-          });
-        });
-      }
+        }
+    });
+});
+
+
+item.addEventListener("mouseleave", () => {
+    const elements = document.querySelectorAll('.element');
+    elements.forEach(el => {
+        if (!el.classList.contains("empty") && el.dataset.savedColor) {
+            // Restaurer la couleur sauvegardée à partir du data-* attribut
+            el.style.backgroundColor = el.dataset.savedColor;
+            // Nettoyer l'attribut une fois restauré
+            delete el.dataset.savedColor;
+        }
+    });
+});
+            }
 
       const groupColors = {
         "Alkali metals": "#FF4C4C",
